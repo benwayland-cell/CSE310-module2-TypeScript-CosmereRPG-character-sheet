@@ -28,8 +28,8 @@ To recreate the development environment, you need the following software and/or 
 
 I found these websites useful in developing this software:
 
-* [Website Title](Link)
-*
+* [W3 Schools TypeScript Tutorial](https://www.w3schools.com/typescript/)
+* [VS Code TypeScript Setup](https://code.visualstudio.com/docs/typescript/typescript-tutorial)
 *
 
 ## Future Work
