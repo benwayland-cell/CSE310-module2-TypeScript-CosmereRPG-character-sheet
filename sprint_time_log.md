@@ -26,11 +26,11 @@ The expected minimum amount of time each Sprint for each category is as follows:
 
 |Date      |Start Time|Category|Description                                 |Total Minutes|
 |----------|----------|:------:|--------------------------------------------|:-----------:|
-|5/12/2026 |  2:00    | MTG    | Planning on work to be done                | 60          |
-|5/12/2026 |  4:00    | TP     | Allowing JS to change site                 | 130         |
-|5/13/2026 | 12:40    | IM     | Setting up Typescript                      | 60          |
-|          |          |        |                                            |             |
-|          |          |        |                                            |             |
+| 5/12     |  2:00    | MTG    | Planning on work to be done                | 60          | Personal
+| 5/12     |  4:00    | TP     | Allowing JS to change site                 | 130         |
+| 5/13     | 12:40    | IM     | Setting up Typescript                      | 60          |
+| 5/14     |  1:00    | MTG    | Finishing bare interfacing with JS and site| 15          | Team
+| 5/14     |  1:40    | MTG    | Setting up for project                     | 35          | Personal
 |          |          |        |                                            |             |
 
 _Note: Add more rows as needed._
