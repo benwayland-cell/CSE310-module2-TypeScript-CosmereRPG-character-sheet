@@ -31,7 +31,7 @@ The expected minimum amount of time each Sprint for each category is as follows:
 | 5/13     | 12:40    | IM     | Setting up Typescript                      | 60          |
 | 5/14     |  1:00    | MTG    | Finishing bare interfacing with JS and site| 15          | Team
 | 5/14     |  1:40    | MTG    | Setting up for project                     | 35          | Personal
-|          |          |        |                                            |             |
+| 5/20     |  3:51    | IM     |                                            |             |
 
 _Note: Add more rows as needed._
 
