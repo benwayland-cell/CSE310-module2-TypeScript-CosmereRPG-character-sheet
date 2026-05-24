@@ -32,16 +32,15 @@ The expected minimum amount of time each Sprint for each category is as follows:
 | 5/14     |  1:00    | MTG    | Finishing bare interfacing with JS and site| 15          | Team
 | 5/14     |  1:40    | MTG    | Setting up for project                     | 35          | Personal
 | 5/20     |  3:50    | IM     | Working on some HTML and CSS               | 30          |
-| 5/23     |  1:10    | IM     |                                            |             |
-
-|          |          |        |                                            |             |
-_Note: Add more rows as needed._
+| 5/21     |  1:30    | MTG    | Making framework for new pages             | 40          | Team
+| 5/23     |  1:00    | IM     | Better CSS and partially functioning ts    | 180         |
+| 5/23     |  7:00    | TP     | Figuring out how to read from a JSON file  | 60          |
 
 ## Sprint Totals
 
-|Categroy                       |Total Time (Hours:Minutes)|
+|Category                       |Total Time (Hours:Minutes)|
 |-------------------------------|:------------------------:|
-|IM - Individual Module         |                          |
-|TP - Team Project              |                          |
-|MTG - Class Meetings           |                          |
-|**TOTAL**                      |                          |
+|IM - Individual Module         |  6:00                    |
+|TP - Team Project              |  4:00                    |
+|MTG - Class Meetings           |  4:00                    |
+|**TOTAL**                      | 10:00                    |
