@@ -36,7 +36,7 @@ const spiritualDefense: number = 10 + awareness + presence + spiritualDefenseBon
 
 const health: number = calculateHealth(strength) + healthBonus;
 const focusPoints: number = calculateFocus(willpower) + focusBonus;
-const investiture: number = calculateInvestiture(awareness, presence);
+const investiture: number = calculateInvestiture(awareness, presence) + investitureBonus;
 
 const movementRate: number = calculateMovementRate(speed) + movementBonus;
 const recoveryDie: number = caclulateRecoveryDie(willpower) + recoveryDieBonus;
@@ -50,9 +50,10 @@ const recoveryDie: number = caclulateRecoveryDie(willpower) + recoveryDieBonus;
 function main() {
     setupHeader();
     setupStats();
+    setupPoints();
 }
 
-function calculateHealth(givenStrength: number): number {return 10 + givenStrength + (level * 5)}
+function calculateHealth(givenStrength: number): number {return 5 + givenStrength + (level * 5)}
 function calculateFocus(givenWillpower: number): number {return 2 + givenWillpower}
 function calculateInvestiture(givenAwareness: number, givenPresence: number): number {return 2 + Math.max(givenAwareness, givenPresence)}
 
@@ -133,6 +134,31 @@ function setupStats() {
 
     const presenceElement = document.getElementById("presence")?.querySelector("p");
     if (presenceElement) {presenceElement.textContent = presence.toString()}
+}
+
+function setupPoints() {
+    let test = document.getElementsByClassName("pointCounter")[0].getElementsByClassName("currentPoint")[0]?.querySelector("form")?.querySelector("input");
+    console.log(test, test?.value);
+
+    let pointsToBeHandled = [health, focusPoints];
+    if (hasInvestitureScore) {
+        pointsToBeHandled = [health, focusPoints, investiture];
+    }
+    const pointCounters = document.getElementsByClassName("pointCounter");
+
+    // Loop through every point counter
+    for (let index = 0;
+            index < pointCounters.length && index < pointsToBeHandled.length;
+            index++) {
+        const currentPointCounterElement = pointCounters[index];
+        const currentPointAmount = pointsToBeHandled[index];
+
+        const maxPointElement = currentPointCounterElement.getElementsByClassName("maxPoint")[0]?.querySelector("p");
+        if (maxPointElement) {maxPointElement.textContent = currentPointAmount.toString()}
+
+        const currentPointAmountElement = currentPointCounterElement.getElementsByClassName("currentPoint")[0]?.querySelector("form")?.querySelector("input");
+        if (currentPointAmountElement) {currentPointAmountElement.value = currentPointAmount.toString()}
+    }
 }
 
 main()

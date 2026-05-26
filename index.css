@@ -55,3 +55,7 @@ header {
     border: solid 2px black;
 
 }
+
+.currentPoint form input {
+    width: 25px;
+}

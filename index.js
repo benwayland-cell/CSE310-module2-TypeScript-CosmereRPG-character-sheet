@@ -27,7 +27,7 @@ const cognitiveDefense = 10 + intellect + willpower + cognitiveDefenseBonus;
 const spiritualDefense = 10 + awareness + presence + spiritualDefenseBonus;
 const health = calculateHealth(strength) + healthBonus;
 const focusPoints = calculateFocus(willpower) + focusBonus;
-const investiture = calculateInvestiture(awareness, presence);
+const investiture = calculateInvestiture(awareness, presence) + investitureBonus;
 const movementRate = calculateMovementRate(speed) + movementBonus;
 const recoveryDie = caclulateRecoveryDie(willpower) + recoveryDieBonus;
 // for (let test = 0; test <= 10; test++ ) {
@@ -36,8 +36,9 @@ const recoveryDie = caclulateRecoveryDie(willpower) + recoveryDieBonus;
 function main() {
     setupHeader();
     setupStats();
+    setupPoints();
 }
-function calculateHealth(givenStrength) { return 10 + givenStrength + (level * 5); }
+function calculateHealth(givenStrength) { return 5 + givenStrength + (level * 5); }
 function calculateFocus(givenWillpower) { return 2 + givenWillpower; }
 function calculateInvestiture(givenAwareness, givenPresence) { return 2 + Math.max(givenAwareness, givenPresence); }
 function calculateMovementRate(givenSpeed) {
@@ -126,6 +127,29 @@ function setupStats() {
     const presenceElement = (_j = document.getElementById("presence")) === null || _j === void 0 ? void 0 : _j.querySelector("p");
     if (presenceElement) {
         presenceElement.textContent = presence.toString();
+    }
+}
+function setupPoints() {
+    var _a, _b, _c, _d, _e;
+    let test = (_b = (_a = document.getElementsByClassName("pointCounter")[0].getElementsByClassName("currentPoint")[0]) === null || _a === void 0 ? void 0 : _a.querySelector("form")) === null || _b === void 0 ? void 0 : _b.querySelector("input");
+    console.log(test, test === null || test === void 0 ? void 0 : test.value);
+    let pointsToBeHandled = [health, focusPoints];
+    if (hasInvestitureScore) {
+        pointsToBeHandled = [health, focusPoints, investiture];
+    }
+    const pointCounters = document.getElementsByClassName("pointCounter");
+    // Loop through every point counter
+    for (let index = 0; index < pointCounters.length && index < pointsToBeHandled.length; index++) {
+        const currentPointCounterElement = pointCounters[index];
+        const currentPointAmount = pointsToBeHandled[index];
+        const maxPointElement = (_c = currentPointCounterElement.getElementsByClassName("maxPoint")[0]) === null || _c === void 0 ? void 0 : _c.querySelector("p");
+        if (maxPointElement) {
+            maxPointElement.textContent = currentPointAmount.toString();
+        }
+        const currentPointAmountElement = (_e = (_d = currentPointCounterElement.getElementsByClassName("currentPoint")[0]) === null || _d === void 0 ? void 0 : _d.querySelector("form")) === null || _e === void 0 ? void 0 : _e.querySelector("input");
+        if (currentPointAmountElement) {
+            currentPointAmountElement.value = currentPointAmount.toString();
+        }
     }
 }
 main();
