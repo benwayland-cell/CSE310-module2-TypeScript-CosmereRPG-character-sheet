@@ -1,45 +1,93 @@
 
-const playerName: string = "Test Player Name";
-const characterName: string = "Test Character Name";
-const paths: string = "Test Path";
-const level: number = 1;
-const ancestry: string = "Human";
+type MainStatsConfig = {
+    strength: number,
+    speed: number,
+    intellect: number,
+    willpower: number,
+    awareness: number,
+    presence: number,
+};
+type ScoreBonusesConfig = {
+    healthBonus: number,
+    focusBonus: number,
+    investitureBonus: number,
+};
+type DefenseBonusesConfig = {
+    physicalDefenseBonus: number,
+    cognitiveDefenseBonus: number,
+    spiritualDefenseBonus: number,
+};
+type OtherBonuses = {
+    movementBonus: number,
+    recoveryDieBonus: number,
+}
+type PlayerStatsConfig = {
+    playerName: string,
+    characterName: string,
+    paths: string,
+    level: number,
+    ancestry: string,
+    deflect: number,
+    hasInvestitureScore: boolean,
+    mainStats: MainStatsConfig,
+    scoreBonuses: ScoreBonusesConfig,
+    defenseBonuses: DefenseBonusesConfig,
+    otherBonuses: OtherBonuses,
+};
 
-const strength: number = 1;
-const speed: number = 1;
-const intellect: number = 1;
-const willpower: number = 1;
-const awareness: number = 1;
-const presence: number = 1;
+const playerStats: PlayerStatsConfig = {
+    playerName: "Test Player Name",
+    characterName: "Test Character Name",
+    paths: "Test Path",
+    level: 1,
+    ancestry: "Human",
+    deflect: 1,
+    hasInvestitureScore: true,
+    mainStats: {
+        strength: 1,
+        speed: 1,
+        intellect: 1,
+        willpower: 1,
+        awareness: 1,
+        presence: 1,
+    },
+    scoreBonuses: {
+        healthBonus: 1,
+        focusBonus: 1,
+        investitureBonus: 1,
+    },
+    defenseBonuses: {
+        physicalDefenseBonus: 0,
+        cognitiveDefenseBonus: 0,
+        spiritualDefenseBonus: 0,
+    },
+    otherBonuses: {
+        movementBonus: 0,
+        recoveryDieBonus: 0,
+    },
+};
 
-const healthBonus: number = 1;
-const focusBonus: number = 1;
-const investitureBonus: number = 1;
-
-const physicalDefenseBonus: number = 0;
-const cognitiveDefenseBonus: number = 0;
-const spiritualDefenseBonus: number = 0;
-
-const movementBonus: number = 0;
-const recoveryDieBonus: number = 0;
-
-const deflect: number = 1;
-
-const hasInvestitureScore: boolean = true;
 
 // Calculated stats
-const tier: number = Math.max((Math.floor((level - 1) / 5.0) + 1), 5);
+const tier: number = Math.max((Math.floor((playerStats.level - 1) / 5.0) + 1), 5);
 
-const physicalDefense: number = 10 + strength + speed + physicalDefenseBonus;
-const cognitiveDefense: number = 10 + intellect + willpower + cognitiveDefenseBonus;
-const spiritualDefense: number = 10 + awareness + presence + spiritualDefenseBonus;
+const mainStats = playerStats.mainStats;
+const defenseBonuses = playerStats.defenseBonuses;
 
-const health: number = calculateHealth(strength) + healthBonus;
-const focusPoints: number = calculateFocus(willpower) + focusBonus;
-const investiture: number = calculateInvestiture(awareness, presence) + investitureBonus;
+const physicalDefense: number = 10 + mainStats.strength + mainStats.speed + defenseBonuses.physicalDefenseBonus;
+const cognitiveDefense: number = 10 + mainStats.intellect + mainStats.willpower + defenseBonuses.cognitiveDefenseBonus;
+const spiritualDefense: number = 10 + mainStats.awareness + mainStats.presence + defenseBonuses.spiritualDefenseBonus;
 
-const movementRate: number = calculateMovementRate(speed) + movementBonus;
-const recoveryDie: number = caclulateRecoveryDie(willpower) + recoveryDieBonus;
+const scoreBonuses = playerStats.scoreBonuses;
+
+const health: number = calculateHealth(mainStats.strength) + scoreBonuses.healthBonus;
+const focusPoints: number = calculateFocus(mainStats.willpower) + scoreBonuses.focusBonus;
+const investiture: number = calculateInvestiture(mainStats.awareness, mainStats.presence) + scoreBonuses.investitureBonus;
+
+const otherBonuses = playerStats.otherBonuses;
+
+const movementRate: number = calculateMovementRate(mainStats.speed) + otherBonuses.movementBonus;
+const recoveryDie: number = caclulateRecoveryDie(mainStats.willpower) + otherBonuses.recoveryDieBonus;
 
 
 // for (let test = 0; test <= 10; test++ ) {
@@ -48,12 +96,12 @@ const recoveryDie: number = caclulateRecoveryDie(willpower) + recoveryDieBonus;
 
 
 function main() {
-    setupHeader();
-    setupStats();
-    setupPoints();
+    setupHeader(playerStats);
+    setupStats(playerStats.mainStats);
+    setupPoints(playerStats.hasInvestitureScore);
 }
 
-function calculateHealth(givenStrength: number): number {return 5 + givenStrength + (level * 5)}
+function calculateHealth(givenStrength: number): number {return 5 + givenStrength + (playerStats.level * 5)}
 function calculateFocus(givenWillpower: number): number {return 2 + givenWillpower}
 function calculateInvestiture(givenAwareness: number, givenPresence: number): number {return 2 + Math.max(givenAwareness, givenPresence)}
 
@@ -87,59 +135,56 @@ function caclulateRecoveryDie(givenWillpower: number): number {
 } 
 
 
-function setupHeader(): void {
+function setupHeader(playerStats: PlayerStatsConfig): void {
     const playerNameElement = document.getElementById("playerName")?.querySelector("p");
-    if (playerNameElement) {playerNameElement.textContent = playerName}
+    if (playerNameElement) {playerNameElement.textContent = playerStats.playerName}
 
     const characterNameElement = document.getElementById("characterName")?.querySelector("p");
-    if (characterNameElement) {characterNameElement.textContent = characterName}
+    if (characterNameElement) {characterNameElement.textContent = playerStats.characterName}
 
     const pathsElement = document.getElementById("paths")?.querySelector("p");
-    if (pathsElement) {pathsElement.textContent = paths}
+    if (pathsElement) {pathsElement.textContent = playerStats.paths}
 
     const levelElement = document.getElementById("level")?.querySelector("p");
-    if (levelElement) {levelElement.textContent = level.toString()}
+    if (levelElement) {levelElement.textContent = playerStats.level.toString()}
 
     const ancestryElement = document.getElementById("ancestry")?.querySelector("p");
-    if (ancestryElement) {ancestryElement.textContent = ancestry}
+    if (ancestryElement) {ancestryElement.textContent = playerStats.ancestry}
 }
 
 
-function setupStats() {
+function setupStats(mainStats: MainStatsConfig) {
     const strengthElement = document.getElementById("strength")?.querySelector("p");
-    if (strengthElement) {strengthElement.textContent = strength.toString()}
+    if (strengthElement) {strengthElement.textContent = mainStats.strength.toString()}
 
     const physicalDefenseElement = document.getElementById("physicalDefense")?.querySelector("p");
     if (physicalDefenseElement) {physicalDefenseElement.textContent = physicalDefense.toString()}
 
     const speedElement = document.getElementById("speed")?.querySelector("p");
-    if (speedElement) {speedElement.textContent = speed.toString()}
+    if (speedElement) {speedElement.textContent = mainStats.speed.toString()}
 
     
     const intellectElement = document.getElementById("intellect")?.querySelector("p");
-    if (intellectElement) {intellectElement.textContent = intellect.toString()}
+    if (intellectElement) {intellectElement.textContent = mainStats.intellect.toString()}
 
     const cognitiveDefenseElement = document.getElementById("cognitiveDefense")?.querySelector("p");
     if (cognitiveDefenseElement) {cognitiveDefenseElement.textContent = cognitiveDefense.toString()}
 
     const willpowerElement = document.getElementById("willpower")?.querySelector("p");
-    if (willpowerElement) {willpowerElement.textContent = willpower.toString()}
+    if (willpowerElement) {willpowerElement.textContent = mainStats.willpower.toString()}
 
     
     const awarenessElement = document.getElementById("awareness")?.querySelector("p");
-    if (awarenessElement) {awarenessElement.textContent = awareness.toString()}
+    if (awarenessElement) {awarenessElement.textContent = mainStats.awareness.toString()}
 
     const spiritualDefenseElement = document.getElementById("spiritualDefense")?.querySelector("p");
     if (spiritualDefenseElement) {spiritualDefenseElement.textContent = spiritualDefense.toString()}
 
     const presenceElement = document.getElementById("presence")?.querySelector("p");
-    if (presenceElement) {presenceElement.textContent = presence.toString()}
+    if (presenceElement) {presenceElement.textContent = mainStats.presence.toString()}
 }
 
-function setupPoints() {
-    let test = document.getElementsByClassName("pointCounter")[0].getElementsByClassName("currentPoint")[0]?.querySelector("form")?.querySelector("input");
-    console.log(test, test?.value);
-
+function setupPoints(hasInvestitureScore: boolean) {
     let pointsToBeHandled = [health, focusPoints];
     if (hasInvestitureScore) {
         pointsToBeHandled = [health, focusPoints, investiture];
