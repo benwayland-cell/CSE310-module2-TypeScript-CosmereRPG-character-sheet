@@ -17,10 +17,20 @@ type DefenseBonusesConfig = {
     cognitiveDefenseBonus: number,
     spiritualDefenseBonus: number,
 };
-type OtherBonuses = {
+type OtherBonusesConfig = {
     movementBonus: number,
     recoveryDieBonus: number,
-}
+};
+type SkillConfig = {
+    name: string,
+    attribute: string,
+    ranks: number
+};
+type SkillsConfig = {
+    physical: SkillConfig[],
+    cognitive: SkillConfig[],
+    spiritual: SkillConfig[]
+};
 type PlayerStatsConfig = {
     playerName: string,
     characterName: string,
@@ -32,7 +42,8 @@ type PlayerStatsConfig = {
     mainStats: MainStatsConfig,
     scoreBonuses: ScoreBonusesConfig,
     defenseBonuses: DefenseBonusesConfig,
-    otherBonuses: OtherBonuses,
+    otherBonuses: OtherBonusesConfig,
+    skills: SkillsConfig,
 };
 
 const playerStats: PlayerStatsConfig = {
@@ -65,6 +76,104 @@ const playerStats: PlayerStatsConfig = {
         movementBonus: 0,
         recoveryDieBonus: 0,
     },
+    skills: {
+        physical: [
+            {
+                name: "Agility",
+                attribute: "SPD",
+                ranks: 1
+            },
+            {
+                name: "Athletics",
+                attribute: "STR",
+                ranks: 1
+            },
+            {
+                name: "Heavy Weaponry",
+                attribute: "STR",
+                ranks: 1
+            },
+            {
+                name: "Light Weaponry",
+                attribute: "SPD",
+                ranks: 1
+            },
+            {
+                name: "Stealth",
+                attribute: "SPD",
+                ranks: 1
+            },
+            {
+                name: "Thievery",
+                attribute: "SPD",
+                ranks: 1
+            }
+        ],
+        cognitive: [
+            {
+                name: "Crafting",
+                attribute: "INT",
+                ranks: 1
+            },
+            {
+                name: "Deduction",
+                attribute: "INT",
+                ranks: 1
+            },
+            {
+                name: "Discipline",
+                attribute: "WIL",
+                ranks: 1
+            },
+            {
+                name: "Intimidation",
+                attribute: "WIL",
+                ranks: 1
+            },
+            {
+                name: "Lore",
+                attribute: "INT",
+                ranks: 1
+            },
+            {
+                name: "Medicine",
+                attribute: "INT",
+                ranks: 1
+            }
+        ],
+        spiritual: [
+            {
+                name: "Deception",
+                attribute: "PRE",
+                ranks: 1
+            },
+            {
+                name: "Insight",
+                attribute: "AWA",
+                ranks: 1
+            },
+            {
+                name: "Leadership",
+                attribute: "PRE",
+                ranks: 1
+            },
+            {
+                name: "Perception",
+                attribute: "AWA",
+                ranks: 1
+            },
+            {
+                name: "Persuasion",
+                attribute: "PRE",
+                ranks: 1
+            },
+            {
+                name: "Survival",
+                attribute: "AWA",
+                ranks: 1
+            }
+        ]
+    }
 };
 
 
@@ -99,6 +208,7 @@ function main() {
     setupHeader(playerStats);
     setupStats(playerStats.mainStats);
     setupPoints(playerStats.hasInvestitureScore);
+    setupSkills(playerStats.mainStats, playerStats.skills);
 }
 
 function calculateHealth(givenStrength: number): number {return 5 + givenStrength + (playerStats.level * 5)}
@@ -204,6 +314,74 @@ function setupPoints(hasInvestitureScore: boolean) {
         const currentPointAmountElement = currentPointCounterElement.getElementsByClassName("currentPoint")[0]?.querySelector("form")?.querySelector("input");
         if (currentPointAmountElement) {currentPointAmountElement.value = currentPointAmount.toString()}
     }
+}
+/*
+<section>
+    <section class="skill">
+        <p class="skillModifier">X</p>
+        <p class="skillName">Skill Name (STA)</p>
+        <p class="ranks">*****</p>
+    </section>
+</section>
+*/
+
+function setupSkills(playerStats: MainStatsConfig, skills: SkillsConfig) {
+    let skillsHTML = "";
+    [skills.physical, skills.cognitive, skills.spiritual].forEach(skillList => {
+        let skillSectionHTML = "";
+        skillList.forEach(skill => {
+            skillSectionHTML += getSkillHTML(playerStats, skill);
+        });
+
+        skillsHTML += `
+            <section>
+                ${skillSectionHTML}
+            </section>
+        `;
+    });
+
+    const skillsElement = document.getElementById("skills");
+    if (skillsElement) skillsElement.innerHTML = skillsHTML;
+}
+
+function getSkillHTML(playerStats: MainStatsConfig, skill: SkillConfig) {
+    let skillModifierNumber: number = skill.ranks;
+    switch (skill.attribute) {
+        case "STR":
+            skillModifierNumber += playerStats.strength;
+            break;
+        case "SPD":
+            skillModifierNumber += playerStats.speed;
+            break;
+        case "INT":
+            skillModifierNumber += playerStats.intellect;
+            break;
+        case "WIL":
+            skillModifierNumber += playerStats.willpower;
+            break;
+        case "AWA":
+            skillModifierNumber += playerStats.awareness;
+            break;
+        case "PRE":
+            skillModifierNumber += playerStats.presence;
+            break;
+    }
+    const skillModifier = skillModifierNumber.toString();
+
+    const skillName: string = `${skill.name} (${skill.attribute})`;
+
+    let ranks: string = "";
+    for (let index = 0; index < skill.ranks; index++) {
+        ranks += "*";
+    }
+
+    return `
+        <section class="skill">
+            <p class="skillModifier">${skillModifier}</p>
+            <p class="skillName">${skillName}</p>
+            <p class="ranks">${ranks}</p>
+        </section>
+    `;
 }
 
 main()

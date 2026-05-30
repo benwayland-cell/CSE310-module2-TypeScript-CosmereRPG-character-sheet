@@ -36,10 +36,10 @@ The expected minimum amount of time each Sprint for each category is as follows:
 | 5/23     |  1:00    | IM     | Better CSS and partially functioning ts    | 180         |
 | 5/23     |  7:00    | TP     | Figuring out how to read from a JSON file  | 60          |
 | 5/26     |  9:00    | IM     | Trying to add variable points              | 60          |
-
-3 hours needed after here
-
 | 5/28     |  1:50    | MTG    |Converting from lots of constants to objects| 30          | Personal
+| 5/30     |  4:00    | IM     | Added dynamic skills                       | 60          |
+
+1.5 hours needed after here
 
 |          |          |        |                                            |             |
 

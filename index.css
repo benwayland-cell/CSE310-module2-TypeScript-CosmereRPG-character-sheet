@@ -59,3 +59,24 @@ header {
 .currentPoint form input {
     width: 25px;
 }
+
+/***** Skills *****/
+
+#skills {
+    /* width: 100%; */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.skill {
+    padding-left: 20px;
+    display: grid;
+    grid-template-columns: 20px 60% 10px;
+    gap: 10px;
+}
+
+.skillModifier {
+    text-align: center;
+    border: solid 2px black;
+    border-radius: 5px;
+}

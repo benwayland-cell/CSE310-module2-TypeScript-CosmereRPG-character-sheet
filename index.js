@@ -1,44 +1,157 @@
 "use strict";
-const playerName = "Test Player Name";
-const characterName = "Test Character Name";
-const paths = "Test Path";
-const level = 1;
-const ancestry = "Human";
-const strength = 1;
-const speed = 1;
-const intellect = 1;
-const willpower = 1;
-const awareness = 1;
-const presence = 1;
-const healthBonus = 1;
-const focusBonus = 1;
-const investitureBonus = 1;
-const physicalDefenseBonus = 0;
-const cognitiveDefenseBonus = 0;
-const spiritualDefenseBonus = 0;
-const movementBonus = 0;
-const recoveryDieBonus = 0;
-const deflect = 1;
-const hasInvestitureScore = true;
+const playerStats = {
+    playerName: "Test Player Name",
+    characterName: "Test Character Name",
+    paths: "Test Path",
+    level: 1,
+    ancestry: "Human",
+    deflect: 1,
+    hasInvestitureScore: true,
+    mainStats: {
+        strength: 1,
+        speed: 1,
+        intellect: 1,
+        willpower: 1,
+        awareness: 1,
+        presence: 1,
+    },
+    scoreBonuses: {
+        healthBonus: 1,
+        focusBonus: 1,
+        investitureBonus: 1,
+    },
+    defenseBonuses: {
+        physicalDefenseBonus: 0,
+        cognitiveDefenseBonus: 0,
+        spiritualDefenseBonus: 0,
+    },
+    otherBonuses: {
+        movementBonus: 0,
+        recoveryDieBonus: 0,
+    },
+    skills: {
+        physical: [
+            {
+                name: "Agility",
+                attribute: "SPD",
+                ranks: 1
+            },
+            {
+                name: "Athletics",
+                attribute: "STR",
+                ranks: 1
+            },
+            {
+                name: "Heavy Weaponry",
+                attribute: "STR",
+                ranks: 1
+            },
+            {
+                name: "Light Weaponry",
+                attribute: "SPD",
+                ranks: 1
+            },
+            {
+                name: "Stealth",
+                attribute: "SPD",
+                ranks: 1
+            },
+            {
+                name: "Thievery",
+                attribute: "SPD",
+                ranks: 1
+            }
+        ],
+        cognitive: [
+            {
+                name: "Crafting",
+                attribute: "INT",
+                ranks: 1
+            },
+            {
+                name: "Deduction",
+                attribute: "INT",
+                ranks: 1
+            },
+            {
+                name: "Discipline",
+                attribute: "WIL",
+                ranks: 1
+            },
+            {
+                name: "Intimidation",
+                attribute: "WIL",
+                ranks: 1
+            },
+            {
+                name: "Lore",
+                attribute: "INT",
+                ranks: 1
+            },
+            {
+                name: "Medicine",
+                attribute: "INT",
+                ranks: 1
+            }
+        ],
+        spiritual: [
+            {
+                name: "Deception",
+                attribute: "PRE",
+                ranks: 1
+            },
+            {
+                name: "Insight",
+                attribute: "AWA",
+                ranks: 1
+            },
+            {
+                name: "Leadership",
+                attribute: "PRE",
+                ranks: 1
+            },
+            {
+                name: "Perception",
+                attribute: "AWA",
+                ranks: 1
+            },
+            {
+                name: "Persuasion",
+                attribute: "PRE",
+                ranks: 1
+            },
+            {
+                name: "Survival",
+                attribute: "AWA",
+                ranks: 1
+            }
+        ]
+    }
+};
 // Calculated stats
-const tier = Math.max((Math.floor((level - 1) / 5.0) + 1), 5);
-const physicalDefense = 10 + strength + speed + physicalDefenseBonus;
-const cognitiveDefense = 10 + intellect + willpower + cognitiveDefenseBonus;
-const spiritualDefense = 10 + awareness + presence + spiritualDefenseBonus;
-const health = calculateHealth(strength) + healthBonus;
-const focusPoints = calculateFocus(willpower) + focusBonus;
-const investiture = calculateInvestiture(awareness, presence) + investitureBonus;
-const movementRate = calculateMovementRate(speed) + movementBonus;
-const recoveryDie = caclulateRecoveryDie(willpower) + recoveryDieBonus;
+const tier = Math.max((Math.floor((playerStats.level - 1) / 5.0) + 1), 5);
+const mainStats = playerStats.mainStats;
+const defenseBonuses = playerStats.defenseBonuses;
+const physicalDefense = 10 + mainStats.strength + mainStats.speed + defenseBonuses.physicalDefenseBonus;
+const cognitiveDefense = 10 + mainStats.intellect + mainStats.willpower + defenseBonuses.cognitiveDefenseBonus;
+const spiritualDefense = 10 + mainStats.awareness + mainStats.presence + defenseBonuses.spiritualDefenseBonus;
+const scoreBonuses = playerStats.scoreBonuses;
+const health = calculateHealth(mainStats.strength) + scoreBonuses.healthBonus;
+const focusPoints = calculateFocus(mainStats.willpower) + scoreBonuses.focusBonus;
+const investiture = calculateInvestiture(mainStats.awareness, mainStats.presence) + scoreBonuses.investitureBonus;
+const otherBonuses = playerStats.otherBonuses;
+const movementRate = calculateMovementRate(mainStats.speed) + otherBonuses.movementBonus;
+const recoveryDie = caclulateRecoveryDie(mainStats.willpower) + otherBonuses.recoveryDieBonus;
 // for (let test = 0; test <= 10; test++ ) {
 //     console.log(test + ": " + caclulateRecoveryDie(test));
 // }
 function main() {
-    setupHeader();
-    setupStats();
-    setupPoints();
+    setupHeader(playerStats);
+    setupStats(playerStats.mainStats);
+    setupPoints(playerStats.hasInvestitureScore);
+    setupSkills(playerStats.mainStats, playerStats.skills);
 }
-function calculateHealth(givenStrength) { return 5 + givenStrength + (level * 5); }
+function calculateHealth(givenStrength) { return 5 + givenStrength + (playerStats.level * 5); }
 function calculateFocus(givenWillpower) { return 2 + givenWillpower; }
 function calculateInvestiture(givenAwareness, givenPresence) { return 2 + Math.max(givenAwareness, givenPresence); }
 function calculateMovementRate(givenSpeed) {
@@ -67,34 +180,34 @@ function caclulateRecoveryDie(givenWillpower) {
     }
     return 20;
 }
-function setupHeader() {
+function setupHeader(playerStats) {
     var _a, _b, _c, _d, _e;
     const playerNameElement = (_a = document.getElementById("playerName")) === null || _a === void 0 ? void 0 : _a.querySelector("p");
     if (playerNameElement) {
-        playerNameElement.textContent = playerName;
+        playerNameElement.textContent = playerStats.playerName;
     }
     const characterNameElement = (_b = document.getElementById("characterName")) === null || _b === void 0 ? void 0 : _b.querySelector("p");
     if (characterNameElement) {
-        characterNameElement.textContent = characterName;
+        characterNameElement.textContent = playerStats.characterName;
     }
     const pathsElement = (_c = document.getElementById("paths")) === null || _c === void 0 ? void 0 : _c.querySelector("p");
     if (pathsElement) {
-        pathsElement.textContent = paths;
+        pathsElement.textContent = playerStats.paths;
     }
     const levelElement = (_d = document.getElementById("level")) === null || _d === void 0 ? void 0 : _d.querySelector("p");
     if (levelElement) {
-        levelElement.textContent = level.toString();
+        levelElement.textContent = playerStats.level.toString();
     }
     const ancestryElement = (_e = document.getElementById("ancestry")) === null || _e === void 0 ? void 0 : _e.querySelector("p");
     if (ancestryElement) {
-        ancestryElement.textContent = ancestry;
+        ancestryElement.textContent = playerStats.ancestry;
     }
 }
-function setupStats() {
+function setupStats(mainStats) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
     const strengthElement = (_a = document.getElementById("strength")) === null || _a === void 0 ? void 0 : _a.querySelector("p");
     if (strengthElement) {
-        strengthElement.textContent = strength.toString();
+        strengthElement.textContent = mainStats.strength.toString();
     }
     const physicalDefenseElement = (_b = document.getElementById("physicalDefense")) === null || _b === void 0 ? void 0 : _b.querySelector("p");
     if (physicalDefenseElement) {
@@ -102,11 +215,11 @@ function setupStats() {
     }
     const speedElement = (_c = document.getElementById("speed")) === null || _c === void 0 ? void 0 : _c.querySelector("p");
     if (speedElement) {
-        speedElement.textContent = speed.toString();
+        speedElement.textContent = mainStats.speed.toString();
     }
     const intellectElement = (_d = document.getElementById("intellect")) === null || _d === void 0 ? void 0 : _d.querySelector("p");
     if (intellectElement) {
-        intellectElement.textContent = intellect.toString();
+        intellectElement.textContent = mainStats.intellect.toString();
     }
     const cognitiveDefenseElement = (_e = document.getElementById("cognitiveDefense")) === null || _e === void 0 ? void 0 : _e.querySelector("p");
     if (cognitiveDefenseElement) {
@@ -114,11 +227,11 @@ function setupStats() {
     }
     const willpowerElement = (_f = document.getElementById("willpower")) === null || _f === void 0 ? void 0 : _f.querySelector("p");
     if (willpowerElement) {
-        willpowerElement.textContent = willpower.toString();
+        willpowerElement.textContent = mainStats.willpower.toString();
     }
     const awarenessElement = (_g = document.getElementById("awareness")) === null || _g === void 0 ? void 0 : _g.querySelector("p");
     if (awarenessElement) {
-        awarenessElement.textContent = awareness.toString();
+        awarenessElement.textContent = mainStats.awareness.toString();
     }
     const spiritualDefenseElement = (_h = document.getElementById("spiritualDefense")) === null || _h === void 0 ? void 0 : _h.querySelector("p");
     if (spiritualDefenseElement) {
@@ -126,13 +239,11 @@ function setupStats() {
     }
     const presenceElement = (_j = document.getElementById("presence")) === null || _j === void 0 ? void 0 : _j.querySelector("p");
     if (presenceElement) {
-        presenceElement.textContent = presence.toString();
+        presenceElement.textContent = mainStats.presence.toString();
     }
 }
-function setupPoints() {
-    var _a, _b, _c, _d, _e;
-    let test = (_b = (_a = document.getElementsByClassName("pointCounter")[0].getElementsByClassName("currentPoint")[0]) === null || _a === void 0 ? void 0 : _a.querySelector("form")) === null || _b === void 0 ? void 0 : _b.querySelector("input");
-    console.log(test, test === null || test === void 0 ? void 0 : test.value);
+function setupPoints(hasInvestitureScore) {
+    var _a, _b, _c;
     let pointsToBeHandled = [health, focusPoints];
     if (hasInvestitureScore) {
         pointsToBeHandled = [health, focusPoints, investiture];
@@ -142,14 +253,76 @@ function setupPoints() {
     for (let index = 0; index < pointCounters.length && index < pointsToBeHandled.length; index++) {
         const currentPointCounterElement = pointCounters[index];
         const currentPointAmount = pointsToBeHandled[index];
-        const maxPointElement = (_c = currentPointCounterElement.getElementsByClassName("maxPoint")[0]) === null || _c === void 0 ? void 0 : _c.querySelector("p");
+        const maxPointElement = (_a = currentPointCounterElement.getElementsByClassName("maxPoint")[0]) === null || _a === void 0 ? void 0 : _a.querySelector("p");
         if (maxPointElement) {
             maxPointElement.textContent = currentPointAmount.toString();
         }
-        const currentPointAmountElement = (_e = (_d = currentPointCounterElement.getElementsByClassName("currentPoint")[0]) === null || _d === void 0 ? void 0 : _d.querySelector("form")) === null || _e === void 0 ? void 0 : _e.querySelector("input");
+        const currentPointAmountElement = (_c = (_b = currentPointCounterElement.getElementsByClassName("currentPoint")[0]) === null || _b === void 0 ? void 0 : _b.querySelector("form")) === null || _c === void 0 ? void 0 : _c.querySelector("input");
         if (currentPointAmountElement) {
             currentPointAmountElement.value = currentPointAmount.toString();
         }
     }
+}
+/*
+<section>
+    <section class="skill">
+        <p class="skillModifier">X</p>
+        <p class="skillName">Skill Name (STA)</p>
+        <p class="ranks">*****</p>
+    </section>
+</section>
+*/
+function setupSkills(playerStats, skills) {
+    let skillsHTML = "";
+    [skills.physical, skills.cognitive, skills.spiritual].forEach(skillList => {
+        let skillSectionHTML = "";
+        skillList.forEach(skill => {
+            skillSectionHTML += getSkillHTML(playerStats, skill);
+        });
+        skillsHTML += `
+            <section>
+                ${skillSectionHTML}
+            </section>
+        `;
+    });
+    const skillsElement = document.getElementById("skills");
+    if (skillsElement)
+        skillsElement.innerHTML = skillsHTML;
+}
+function getSkillHTML(playerStats, skill) {
+    let skillModifierNumber = skill.ranks;
+    switch (skill.attribute) {
+        case "STR":
+            skillModifierNumber += playerStats.strength;
+            break;
+        case "SPD":
+            skillModifierNumber += playerStats.speed;
+            break;
+        case "INT":
+            skillModifierNumber += playerStats.intellect;
+            break;
+        case "WIL":
+            skillModifierNumber += playerStats.willpower;
+            break;
+        case "AWA":
+            skillModifierNumber += playerStats.awareness;
+            break;
+        case "PRE":
+            skillModifierNumber += playerStats.presence;
+            break;
+    }
+    const skillModifier = skillModifierNumber.toString();
+    const skillName = `${skill.name} (${skill.attribute})`;
+    let ranks = "";
+    for (let index = 0; index < skill.ranks; index++) {
+        ranks += "*";
+    }
+    return `
+        <section class="skill">
+            <p class="skillModifier">${skillModifier}</p>
+            <p class="skillName">${skillName}</p>
+            <p class="ranks">${ranks}</p>
+        </section>
+    `;
 }
 main();
