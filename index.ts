@@ -35,8 +35,7 @@ type SkillsConfig = {
 };
 type OtherSectionConfig = {
     name: string,
-    text: string,
-    formattingWidth: number
+    text: string
 };
 type PlayerStatsConfig = {
     playerName: string,
@@ -187,23 +186,19 @@ const playerStats: PlayerStatsConfig = {
     otherSections: [
         {
             name: "Conditions & Injuries",
-            text: "Empty Injuries",
-            formattingWidth: 1
+            text: "Empty Injuries"
         },  
         {
             name: "Expertieses",
-            text: "Alethi, Shortsword",
-            formattingWidth: 2
+            text: "Alethi, Shortsword"
         },  
         {
             name: "Weapons",
-            text: "Shortsword 1d6, Light",
-            formattingWidth: 1
+            text: "Shortsword 1d6, Light"
         },  
         {
             name: "Talents",
-            text: "Talent 1 <br> Talent 2",
-            formattingWidth: 1
+            text: "Talent 1 <br> Talent 2"
         },  
     ]
 };
@@ -262,6 +257,7 @@ function main() {
     setupPoints(playerStats.hasInvestitureScore, scores);
     setupSkills(playerStats.mainStats, playerStats.skills);
     setupOtherStats(otherStats);
+    setupOtherSections(playerStats.otherSections);
 }
 
 function calculateHealth(givenStrength: number): number {return 5 + givenStrength + (playerStats.level * 5)}
@@ -483,6 +479,21 @@ function setupOtherStats(otherStats: OtherStatsConfig) {
     if (sensesRangeElement) {sensesRangeElement.textContent = otherStats.sensesRange + " ft"}
 
     
+}
+
+function setupOtherSections(otherSections: OtherSectionConfig[]) {
+    const otherSectionsElement = document.getElementById("otherSections");
+    if (!otherSectionsElement) return;
+    otherSectionsElement.innerHTML = "";
+
+    otherSections.forEach(section => {
+        otherSectionsElement.innerHTML += `
+            <section class="otherSection">
+                <h2>${section.name}</h2>
+                <p>${section.text}</p>
+            </section>
+        `;
+    });
 }
 
 main()
