@@ -80,3 +80,16 @@ header {
     border: solid 2px black;
     border-radius: 5px;
 }
+
+/***** Other Stats *****/
+
+#otherStats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr 2fr;
+    gap: 10px;
+}
+
+.otherStat {
+    border: solid 2px black;
+    padding: 10px;
+}

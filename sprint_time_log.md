@@ -41,6 +41,8 @@ The expected minimum amount of time each Sprint for each category is as follows:
 
 1.5 hours needed after here
 
+| 6/3      | 5:00     | IM     |                                            |             |
+
 |          |          |        |                                            |             |
 
 ## Sprint Totals
