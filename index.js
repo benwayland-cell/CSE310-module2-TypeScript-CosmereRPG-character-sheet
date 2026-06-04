@@ -306,7 +306,6 @@ function setupOtherSections(playerStats) {
 const forms = document.querySelectorAll("form");
 forms.forEach(form => {
     form.addEventListener("submit", function (event) {
-        console.log("Ran event");
         event.preventDefault();
     });
 });
