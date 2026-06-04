@@ -1,4 +1,5 @@
 
+// Given Data types
 type MainStatsConfig = {
     strength: number,
     speed: number,
@@ -53,7 +54,8 @@ type PlayerStatsConfig = {
     otherSections: OtherSectionConfig[],
 };
 
-const playerStats: PlayerStatsConfig = {
+// Given Data
+const givenData: PlayerStatsConfig = {
     playerName: "Test Player Name",
     characterName: "Test Character Name",
     paths: "Test Path",
@@ -203,66 +205,58 @@ const playerStats: PlayerStatsConfig = {
     ]
 };
 
-
-// Calculated stats
-const tier: number = Math.max((Math.floor((playerStats.level - 1) / 5.0) + 1), 5);
-
-const mainStats = playerStats.mainStats;
-const defenseBonuses = playerStats.defenseBonuses;
-
+// Calculated stats types
 type DefenseConfig = {
     physicalDefense: number,
     cognitiveDefense: number,
     spiritualDefense: number
 };
-const defenses: DefenseConfig = {
-    physicalDefense: 10 + mainStats.strength + mainStats.speed + defenseBonuses.physicalDefenseBonus,
-    cognitiveDefense: 10 + mainStats.intellect + mainStats.willpower + defenseBonuses.cognitiveDefenseBonus,
-    spiritualDefense: 10 + mainStats.awareness + mainStats.presence + defenseBonuses.spiritualDefenseBonus
-};
-
-
-const scoreBonuses = playerStats.scoreBonuses;
-
 type ScoresConfig = {
     health: number,
     focusPoints: number,
     investiture: number
 }
-const scores = {
-    health: calculateHealth(mainStats.strength) + scoreBonuses.healthBonus,
-    focusPoints: calculateFocus(mainStats.willpower) + scoreBonuses.focusBonus,
-    investiture: calculateInvestiture(mainStats.awareness, mainStats.presence) + scoreBonuses.investitureBonus
-};
-
-const otherBonuses = playerStats.otherBonuses;
-
 type OtherStatsConfig = {
     liftingCapacity: number,
     movementRate: number,
     recoveryDie: number,
     sensesRange: number
 }
-const otherStats = {
-    liftingCapacity: calculateLiftingCapacity(mainStats.strength) + otherBonuses.liftingBonus,
-    movementRate: calculateMovementRate(mainStats.speed) + otherBonuses.movementBonus,
-    recoveryDie: calculateRecoveryDie(mainStats.willpower) + otherBonuses.recoveryDieBonus,
-    sensesRange: calculateSensesRange(mainStats.awareness) + otherBonuses.sensesRangeBonus
-}
 
 
 function main() {
+    const playerStats = givenData;
     setupHeader(playerStats);
-    setupStats(playerStats.mainStats, defenses);
-    setupPoints(playerStats.hasInvestitureScore, scores);
-    setupSkills(playerStats.mainStats, playerStats.skills);
-    setupOtherStats(otherStats);
-    setupOtherSections(playerStats.otherSections);
+    setupStats(playerStats);
+    setupPoints(playerStats);
+    setupSkills(playerStats);
+    setupOtherStats(playerStats);
+    setupOtherSections(playerStats);
 }
 
-function calculateHealth(givenStrength: number): number {return 5 + givenStrength + (playerStats.level * 5)}
+function calculateDefenses(playerStats: PlayerStatsConfig): DefenseConfig {
+    const mainStats: MainStatsConfig = playerStats.mainStats;
+    const defenseBonuses: DefenseBonusesConfig = playerStats.defenseBonuses;
+    return {
+        physicalDefense: 10 + mainStats.strength + mainStats.speed + defenseBonuses.physicalDefenseBonus,
+        cognitiveDefense: 10 + mainStats.intellect + mainStats.willpower + defenseBonuses.cognitiveDefenseBonus,
+        spiritualDefense: 10 + mainStats.awareness + mainStats.presence + defenseBonuses.spiritualDefenseBonus
+    };
+}
+
+function calculateHealth(givenStrength: number, level: number): number {return 5 + givenStrength + (level * 5)}
 function calculateFocus(givenWillpower: number): number {return 2 + givenWillpower}
 function calculateInvestiture(givenAwareness: number, givenPresence: number): number {return 2 + Math.max(givenAwareness, givenPresence)}
+
+function calculateScores(playerStats: PlayerStatsConfig): ScoresConfig {
+    const mainStats: MainStatsConfig = playerStats.mainStats;
+    const scoreBonuses: ScoreBonusesConfig = playerStats.scoreBonuses;
+    return {
+        health: calculateHealth(mainStats.strength, playerStats.level) + scoreBonuses.healthBonus,
+        focusPoints: calculateFocus(mainStats.willpower) + scoreBonuses.focusBonus,
+        investiture: calculateInvestiture(mainStats.awareness, mainStats.presence) + scoreBonuses.investitureBonus
+    };
+}
 
 function calculateLiftingCapacity(givenStrength: number): number {
     switch (givenStrength) {
@@ -334,6 +328,17 @@ function calculateSensesRange(givenAwareness: number): number {
     }
 }
 
+function calculateOtherStats(playerStats: PlayerStatsConfig): OtherStatsConfig {
+    const mainStats: MainStatsConfig = playerStats.mainStats;
+    const otherBonuses: OtherBonusesConfig = playerStats.otherBonuses;
+    return {
+        liftingCapacity: calculateLiftingCapacity(mainStats.strength) + otherBonuses.liftingBonus,
+        movementRate: calculateMovementRate(mainStats.speed) + otherBonuses.movementBonus,
+        recoveryDie: calculateRecoveryDie(mainStats.willpower) + otherBonuses.recoveryDieBonus,
+        sensesRange: calculateSensesRange(mainStats.awareness) + otherBonuses.sensesRangeBonus
+    };
+}
+
 
 function setupHeader(playerStats: PlayerStatsConfig): void {
     const playerNameElement = document.getElementById("playerName")?.querySelector("p");
@@ -353,7 +358,10 @@ function setupHeader(playerStats: PlayerStatsConfig): void {
 }
 
 
-function setupStats(mainStats: MainStatsConfig, defenses: DefenseConfig) {
+function setupStats(playerStats: PlayerStatsConfig) {
+    const mainStats: MainStatsConfig = playerStats.mainStats;
+    const defenses: DefenseConfig = calculateDefenses(playerStats);
+
     const strengthElement = document.getElementById("strength")?.querySelector("p");
     if (strengthElement) {strengthElement.textContent = mainStats.strength.toString()}
 
@@ -384,7 +392,10 @@ function setupStats(mainStats: MainStatsConfig, defenses: DefenseConfig) {
     if (presenceElement) {presenceElement.textContent = mainStats.presence.toString()}
 }
 
-function setupPoints(hasInvestitureScore: boolean, scores: ScoresConfig) {
+function setupPoints(playerStats: PlayerStatsConfig) {
+    const hasInvestitureScore: boolean = playerStats.hasInvestitureScore;
+    const scores: ScoresConfig = calculateScores(playerStats);
+
     let pointsToBeHandled = [scores.health, scores.focusPoints];
     if (hasInvestitureScore) {
         pointsToBeHandled = [scores.health, scores.focusPoints, scores.investiture];
@@ -406,12 +417,15 @@ function setupPoints(hasInvestitureScore: boolean, scores: ScoresConfig) {
     }
 }
 
-function setupSkills(playerStats: MainStatsConfig, skills: SkillsConfig) {
+function setupSkills(playerStats: PlayerStatsConfig) {
+    const mainStats: MainStatsConfig = playerStats.mainStats;
+    const skills: SkillsConfig = playerStats.skills;
+
     let skillsHTML = "";
     [skills.physical, skills.cognitive, skills.spiritual].forEach(skillList => {
         let skillSectionHTML = "";
         skillList.forEach(skill => {
-            skillSectionHTML += getSkillHTML(playerStats, skill);
+            skillSectionHTML += getSkillHTML(mainStats, skill);
         });
 
         skillsHTML += `
@@ -465,7 +479,9 @@ function getSkillHTML(playerStats: MainStatsConfig, skill: SkillConfig) {
     `;
 }
 
-function setupOtherStats(otherStats: OtherStatsConfig) {
+function setupOtherStats(playerStats: PlayerStatsConfig) {
+    const otherStats: OtherStatsConfig = calculateOtherStats(playerStats);
+
     const liftingCapacityElement = document.getElementById("liftingCapacity")?.querySelector("p");
     if (liftingCapacityElement) {liftingCapacityElement.textContent = otherStats.liftingCapacity + " lbs"}
 
@@ -477,11 +493,10 @@ function setupOtherStats(otherStats: OtherStatsConfig) {
 
     const sensesRangeElement = document.getElementById("sensesRange")?.querySelector("p");
     if (sensesRangeElement) {sensesRangeElement.textContent = otherStats.sensesRange + " ft"}
-
-    
 }
 
-function setupOtherSections(otherSections: OtherSectionConfig[]) {
+function setupOtherSections(playerStats: PlayerStatsConfig) {
+    const otherSections: OtherSectionConfig[] = playerStats.otherSections;
     const otherSectionsElement = document.getElementById("otherSections");
     if (!otherSectionsElement) return;
     otherSectionsElement.innerHTML = "";

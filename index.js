@@ -1,5 +1,6 @@
 "use strict";
-const playerStats = {
+// Given Data
+const givenData = {
     playerName: "Test Player Name",
     characterName: "Test Character Name",
     paths: "Test Path",
@@ -148,39 +149,36 @@ const playerStats = {
         },
     ]
 };
-// Calculated stats
-const tier = Math.max((Math.floor((playerStats.level - 1) / 5.0) + 1), 5);
-const mainStats = playerStats.mainStats;
-const defenseBonuses = playerStats.defenseBonuses;
-const defenses = {
-    physicalDefense: 10 + mainStats.strength + mainStats.speed + defenseBonuses.physicalDefenseBonus,
-    cognitiveDefense: 10 + mainStats.intellect + mainStats.willpower + defenseBonuses.cognitiveDefenseBonus,
-    spiritualDefense: 10 + mainStats.awareness + mainStats.presence + defenseBonuses.spiritualDefenseBonus
-};
-const scoreBonuses = playerStats.scoreBonuses;
-const scores = {
-    health: calculateHealth(mainStats.strength) + scoreBonuses.healthBonus,
-    focusPoints: calculateFocus(mainStats.willpower) + scoreBonuses.focusBonus,
-    investiture: calculateInvestiture(mainStats.awareness, mainStats.presence) + scoreBonuses.investitureBonus
-};
-const otherBonuses = playerStats.otherBonuses;
-const otherStats = {
-    liftingCapacity: calculateLiftingCapacity(mainStats.strength) + otherBonuses.liftingBonus,
-    movementRate: calculateMovementRate(mainStats.speed) + otherBonuses.movementBonus,
-    recoveryDie: calculateRecoveryDie(mainStats.willpower) + otherBonuses.recoveryDieBonus,
-    sensesRange: calculateSensesRange(mainStats.awareness) + otherBonuses.sensesRangeBonus
-};
 function main() {
+    const playerStats = givenData;
     setupHeader(playerStats);
-    setupStats(playerStats.mainStats, defenses);
-    setupPoints(playerStats.hasInvestitureScore, scores);
-    setupSkills(playerStats.mainStats, playerStats.skills);
-    setupOtherStats(otherStats);
-    setupOtherSections(playerStats.otherSections);
+    setupStats(playerStats);
+    setupPoints(playerStats);
+    setupSkills(playerStats);
+    setupOtherStats(playerStats);
+    setupOtherSections(playerStats);
 }
-function calculateHealth(givenStrength) { return 5 + givenStrength + (playerStats.level * 5); }
+function calculateDefenses(playerStats) {
+    const mainStats = playerStats.mainStats;
+    const defenseBonuses = playerStats.defenseBonuses;
+    return {
+        physicalDefense: 10 + mainStats.strength + mainStats.speed + defenseBonuses.physicalDefenseBonus,
+        cognitiveDefense: 10 + mainStats.intellect + mainStats.willpower + defenseBonuses.cognitiveDefenseBonus,
+        spiritualDefense: 10 + mainStats.awareness + mainStats.presence + defenseBonuses.spiritualDefenseBonus
+    };
+}
+function calculateHealth(givenStrength, level) { return 5 + givenStrength + (level * 5); }
 function calculateFocus(givenWillpower) { return 2 + givenWillpower; }
 function calculateInvestiture(givenAwareness, givenPresence) { return 2 + Math.max(givenAwareness, givenPresence); }
+function calculateScores(playerStats) {
+    const mainStats = playerStats.mainStats;
+    const scoreBonuses = playerStats.scoreBonuses;
+    return {
+        health: calculateHealth(mainStats.strength, playerStats.level) + scoreBonuses.healthBonus,
+        focusPoints: calculateFocus(mainStats.willpower) + scoreBonuses.focusBonus,
+        investiture: calculateInvestiture(mainStats.awareness, mainStats.presence) + scoreBonuses.investitureBonus
+    };
+}
 function calculateLiftingCapacity(givenStrength) {
     switch (givenStrength) {
         case 0:
@@ -247,6 +245,16 @@ function calculateSensesRange(givenAwareness) {
             return 999;
     }
 }
+function calculateOtherStats(playerStats) {
+    const mainStats = playerStats.mainStats;
+    const otherBonuses = playerStats.otherBonuses;
+    return {
+        liftingCapacity: calculateLiftingCapacity(mainStats.strength) + otherBonuses.liftingBonus,
+        movementRate: calculateMovementRate(mainStats.speed) + otherBonuses.movementBonus,
+        recoveryDie: calculateRecoveryDie(mainStats.willpower) + otherBonuses.recoveryDieBonus,
+        sensesRange: calculateSensesRange(mainStats.awareness) + otherBonuses.sensesRangeBonus
+    };
+}
 function setupHeader(playerStats) {
     var _a, _b, _c, _d, _e;
     const playerNameElement = (_a = document.getElementById("playerName")) === null || _a === void 0 ? void 0 : _a.querySelector("p");
@@ -270,8 +278,10 @@ function setupHeader(playerStats) {
         ancestryElement.textContent = playerStats.ancestry;
     }
 }
-function setupStats(mainStats, defenses) {
+function setupStats(playerStats) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+    const mainStats = playerStats.mainStats;
+    const defenses = calculateDefenses(playerStats);
     const strengthElement = (_a = document.getElementById("strength")) === null || _a === void 0 ? void 0 : _a.querySelector("p");
     if (strengthElement) {
         strengthElement.textContent = mainStats.strength.toString();
@@ -309,8 +319,10 @@ function setupStats(mainStats, defenses) {
         presenceElement.textContent = mainStats.presence.toString();
     }
 }
-function setupPoints(hasInvestitureScore, scores) {
+function setupPoints(playerStats) {
     var _a, _b, _c;
+    const hasInvestitureScore = playerStats.hasInvestitureScore;
+    const scores = calculateScores(playerStats);
     let pointsToBeHandled = [scores.health, scores.focusPoints];
     if (hasInvestitureScore) {
         pointsToBeHandled = [scores.health, scores.focusPoints, scores.investiture];
@@ -330,12 +342,14 @@ function setupPoints(hasInvestitureScore, scores) {
         }
     }
 }
-function setupSkills(playerStats, skills) {
+function setupSkills(playerStats) {
+    const mainStats = playerStats.mainStats;
+    const skills = playerStats.skills;
     let skillsHTML = "";
     [skills.physical, skills.cognitive, skills.spiritual].forEach(skillList => {
         let skillSectionHTML = "";
         skillList.forEach(skill => {
-            skillSectionHTML += getSkillHTML(playerStats, skill);
+            skillSectionHTML += getSkillHTML(mainStats, skill);
         });
         skillsHTML += `
             <section>
@@ -383,8 +397,9 @@ function getSkillHTML(playerStats, skill) {
         </section>
     `;
 }
-function setupOtherStats(otherStats) {
+function setupOtherStats(playerStats) {
     var _a, _b, _c, _d;
+    const otherStats = calculateOtherStats(playerStats);
     const liftingCapacityElement = (_a = document.getElementById("liftingCapacity")) === null || _a === void 0 ? void 0 : _a.querySelector("p");
     if (liftingCapacityElement) {
         liftingCapacityElement.textContent = otherStats.liftingCapacity + " lbs";
@@ -402,7 +417,8 @@ function setupOtherStats(otherStats) {
         sensesRangeElement.textContent = otherStats.sensesRange + " ft";
     }
 }
-function setupOtherSections(otherSections) {
+function setupOtherSections(playerStats) {
+    const otherSections = playerStats.otherSections;
     const otherSectionsElement = document.getElementById("otherSections");
     if (!otherSectionsElement)
         return;
