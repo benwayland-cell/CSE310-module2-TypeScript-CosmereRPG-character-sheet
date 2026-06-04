@@ -1,4 +1,10 @@
 
+async function getData<T>(filePath: string): Promise<T> {
+    const response = await fetch(filePath);
+    if (!response.ok) throw new Error(`Failed to load ${filePath}`);
+    return response.json() as Promise<T>;
+}
+
 // Given Data types
 type MainStatsConfig = {
     strength: number,
@@ -54,157 +60,6 @@ type PlayerStatsConfig = {
     otherSections: OtherSectionConfig[],
 };
 
-// Given Data
-const givenData: PlayerStatsConfig = {
-    playerName: "Test Player Name",
-    characterName: "Test Character Name",
-    paths: "Test Path",
-    level: 1,
-    ancestry: "Human",
-    deflect: 1,
-    hasInvestitureScore: true,
-    mainStats: {
-        strength: 1,
-        speed: 1,
-        intellect: 1,
-        willpower: 1,
-        awareness: 1,
-        presence: 1,
-    },
-    scoreBonuses: {
-        healthBonus: 1,
-        focusBonus: 1,
-        investitureBonus: 1,
-    },
-    defenseBonuses: {
-        physicalDefenseBonus: 0,
-        cognitiveDefenseBonus: 0,
-        spiritualDefenseBonus: 0,
-    },
-    otherBonuses: {
-        liftingBonus: 0,
-        movementBonus: 0,
-        recoveryDieBonus: 0,
-        sensesRangeBonus: 0,
-    },
-    skills: {
-        physical: [
-            {
-                name: "Agility",
-                attribute: "SPD",
-                ranks: 1
-            },
-            {
-                name: "Athletics",
-                attribute: "STR",
-                ranks: 1
-            },
-            {
-                name: "Heavy Weaponry",
-                attribute: "STR",
-                ranks: 1
-            },
-            {
-                name: "Light Weaponry",
-                attribute: "SPD",
-                ranks: 1
-            },
-            {
-                name: "Stealth",
-                attribute: "SPD",
-                ranks: 1
-            },
-            {
-                name: "Thievery",
-                attribute: "SPD",
-                ranks: 1
-            }
-        ],
-        cognitive: [
-            {
-                name: "Crafting",
-                attribute: "INT",
-                ranks: 1
-            },
-            {
-                name: "Deduction",
-                attribute: "INT",
-                ranks: 1
-            },
-            {
-                name: "Discipline",
-                attribute: "WIL",
-                ranks: 1
-            },
-            {
-                name: "Intimidation",
-                attribute: "WIL",
-                ranks: 1
-            },
-            {
-                name: "Lore",
-                attribute: "INT",
-                ranks: 1
-            },
-            {
-                name: "Medicine",
-                attribute: "INT",
-                ranks: 1
-            }
-        ],
-        spiritual: [
-            {
-                name: "Deception",
-                attribute: "PRE",
-                ranks: 1
-            },
-            {
-                name: "Insight",
-                attribute: "AWA",
-                ranks: 1
-            },
-            {
-                name: "Leadership",
-                attribute: "PRE",
-                ranks: 1
-            },
-            {
-                name: "Perception",
-                attribute: "AWA",
-                ranks: 1
-            },
-            {
-                name: "Persuasion",
-                attribute: "PRE",
-                ranks: 1
-            },
-            {
-                name: "Survival",
-                attribute: "AWA",
-                ranks: 1
-            }
-        ]
-    },
-    otherSections: [
-        {
-            name: "Conditions & Injuries",
-            text: "Empty Injuries"
-        },  
-        {
-            name: "Expertieses",
-            text: "Alethi, Shortsword"
-        },  
-        {
-            name: "Weapons",
-            text: "Shortsword 1d6, Light"
-        },  
-        {
-            name: "Talents",
-            text: "Talent 1 <br> Talent 2"
-        },  
-    ]
-};
-
 // Calculated stats types
 type DefenseConfig = {
     physicalDefense: number,
@@ -224,8 +79,8 @@ type OtherStatsConfig = {
 }
 
 
-function main() {
-    const playerStats = givenData;
+async function main() {
+    const playerStats: PlayerStatsConfig = await getData<PlayerStatsConfig>("player-data.json");
     setupHeader(playerStats);
     setupStats(playerStats);
     setupPoints(playerStats);

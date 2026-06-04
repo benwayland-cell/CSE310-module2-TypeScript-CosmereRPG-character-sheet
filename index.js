@@ -1,162 +1,31 @@
 "use strict";
-// Given Data
-const givenData = {
-    playerName: "Test Player Name",
-    characterName: "Test Character Name",
-    paths: "Test Path",
-    level: 1,
-    ancestry: "Human",
-    deflect: 1,
-    hasInvestitureScore: true,
-    mainStats: {
-        strength: 1,
-        speed: 1,
-        intellect: 1,
-        willpower: 1,
-        awareness: 1,
-        presence: 1,
-    },
-    scoreBonuses: {
-        healthBonus: 1,
-        focusBonus: 1,
-        investitureBonus: 1,
-    },
-    defenseBonuses: {
-        physicalDefenseBonus: 0,
-        cognitiveDefenseBonus: 0,
-        spiritualDefenseBonus: 0,
-    },
-    otherBonuses: {
-        liftingBonus: 0,
-        movementBonus: 0,
-        recoveryDieBonus: 0,
-        sensesRangeBonus: 0,
-    },
-    skills: {
-        physical: [
-            {
-                name: "Agility",
-                attribute: "SPD",
-                ranks: 1
-            },
-            {
-                name: "Athletics",
-                attribute: "STR",
-                ranks: 1
-            },
-            {
-                name: "Heavy Weaponry",
-                attribute: "STR",
-                ranks: 1
-            },
-            {
-                name: "Light Weaponry",
-                attribute: "SPD",
-                ranks: 1
-            },
-            {
-                name: "Stealth",
-                attribute: "SPD",
-                ranks: 1
-            },
-            {
-                name: "Thievery",
-                attribute: "SPD",
-                ranks: 1
-            }
-        ],
-        cognitive: [
-            {
-                name: "Crafting",
-                attribute: "INT",
-                ranks: 1
-            },
-            {
-                name: "Deduction",
-                attribute: "INT",
-                ranks: 1
-            },
-            {
-                name: "Discipline",
-                attribute: "WIL",
-                ranks: 1
-            },
-            {
-                name: "Intimidation",
-                attribute: "WIL",
-                ranks: 1
-            },
-            {
-                name: "Lore",
-                attribute: "INT",
-                ranks: 1
-            },
-            {
-                name: "Medicine",
-                attribute: "INT",
-                ranks: 1
-            }
-        ],
-        spiritual: [
-            {
-                name: "Deception",
-                attribute: "PRE",
-                ranks: 1
-            },
-            {
-                name: "Insight",
-                attribute: "AWA",
-                ranks: 1
-            },
-            {
-                name: "Leadership",
-                attribute: "PRE",
-                ranks: 1
-            },
-            {
-                name: "Perception",
-                attribute: "AWA",
-                ranks: 1
-            },
-            {
-                name: "Persuasion",
-                attribute: "PRE",
-                ranks: 1
-            },
-            {
-                name: "Survival",
-                attribute: "AWA",
-                ranks: 1
-            }
-        ]
-    },
-    otherSections: [
-        {
-            name: "Conditions & Injuries",
-            text: "Empty Injuries"
-        },
-        {
-            name: "Expertieses",
-            text: "Alethi, Shortsword"
-        },
-        {
-            name: "Weapons",
-            text: "Shortsword 1d6, Light"
-        },
-        {
-            name: "Talents",
-            text: "Talent 1 <br> Talent 2"
-        },
-    ]
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
 };
+function getData(filePath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield fetch(filePath);
+        if (!response.ok)
+            throw new Error(`Failed to load ${filePath}`);
+        return response.json();
+    });
+}
 function main() {
-    const playerStats = givenData;
-    setupHeader(playerStats);
-    setupStats(playerStats);
-    setupPoints(playerStats);
-    setupSkills(playerStats);
-    setupOtherStats(playerStats);
-    setupOtherSections(playerStats);
+    return __awaiter(this, void 0, void 0, function* () {
+        const playerStats = yield getData("player-data.json");
+        setupHeader(playerStats);
+        setupStats(playerStats);
+        setupPoints(playerStats);
+        setupSkills(playerStats);
+        setupOtherStats(playerStats);
+        setupOtherSections(playerStats);
+    });
 }
 function calculateDefenses(playerStats) {
     const mainStats = playerStats.mainStats;

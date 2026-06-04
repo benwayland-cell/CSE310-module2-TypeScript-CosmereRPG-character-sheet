@@ -38,18 +38,14 @@ The expected minimum amount of time each Sprint for each category is as follows:
 | 5/26     |  9:00    | IM     | Trying to add variable points              | 60          |
 | 5/28     |  1:50    | MTG    |Converting from lots of constants to objects| 30          | Personal
 | 5/30     |  4:00    | IM     | Added dynamic skills                       | 60          |
-
-1.5 hours needed after here
-
-| 6/3      | 5:00     | IM     |                                            |             |
-
-|          |          |        |                                            |             |
+| 6/3      | 5:00     | IM     | Adding final stats to page and refactoring | 60          |
+| 6/3      | 8:00     | IM     | Implemented reading from a JSON file       | 30          |
 
 ## Sprint Totals
 
 |Category                       |Total Time (Hours:Minutes)|
 |-------------------------------|:------------------------:|
-|IM - Individual Module         |  6:00                    |
+|IM - Individual Module         | 10:00                    |
 |TP - Team Project              |  4:00                    |
 |MTG - Class Meetings           |  4:00                    |
-|**TOTAL**                      | 10:00                    |
+|**TOTAL**                      | 18:00                    |
