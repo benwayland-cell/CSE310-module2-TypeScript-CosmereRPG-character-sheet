@@ -8,23 +8,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-function getData(filePath) {
+const FILE_TO_READ = "player-data.json";
+function init() {
     return __awaiter(this, void 0, void 0, function* () {
-        const response = yield fetch(filePath);
-        if (!response.ok)
-            throw new Error(`Failed to load ${filePath}`);
-        return response.json();
-    });
-}
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const playerStats = yield getData("player-data.json");
+        const playerStats = yield getData(FILE_TO_READ);
         setupHeader(playerStats);
         setupStats(playerStats);
         setupPoints(playerStats);
         setupSkills(playerStats);
         setupOtherStats(playerStats);
         setupOtherSections(playerStats);
+    });
+}
+function getData(filePath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const response = yield fetch(filePath);
+        if (!response.ok)
+            throw new Error(`Failed to load ${filePath}`);
+        return response.json();
     });
 }
 function calculateDefenses(playerStats) {
@@ -301,4 +302,4 @@ function setupOtherSections(playerStats) {
         `;
     });
 }
-main();
+init();

@@ -1,9 +1,5 @@
 
-async function getData<T>(filePath: string): Promise<T> {
-    const response = await fetch(filePath);
-    if (!response.ok) throw new Error(`Failed to load ${filePath}`);
-    return response.json() as Promise<T>;
-}
+const FILE_TO_READ = "player-data.json";
 
 // Given Data types
 type MainStatsConfig = {
@@ -79,14 +75,20 @@ type OtherStatsConfig = {
 }
 
 
-async function main() {
-    const playerStats: PlayerStatsConfig = await getData<PlayerStatsConfig>("player-data.json");
+async function init() {
+    const playerStats: PlayerStatsConfig = await getData<PlayerStatsConfig>(FILE_TO_READ);
     setupHeader(playerStats);
     setupStats(playerStats);
     setupPoints(playerStats);
     setupSkills(playerStats);
     setupOtherStats(playerStats);
     setupOtherSections(playerStats);
+}
+
+async function getData<T>(filePath: string): Promise<T> {
+    const response = await fetch(filePath);
+    if (!response.ok) throw new Error(`Failed to load ${filePath}`);
+    return response.json() as Promise<T>;
 }
 
 function calculateDefenses(playerStats: PlayerStatsConfig): DefenseConfig {
@@ -366,4 +368,4 @@ function setupOtherSections(playerStats: PlayerStatsConfig) {
     });
 }
 
-main()
+init()
