@@ -7,7 +7,7 @@ This is a website that dynamically creates a Cosmere RPG character sheet based o
 Steps to build and/or run the software:
 
 1. Go to [this website](https://benwayland-cell.github.io/CSE310-module2-TypeScript-CosmereRPG-character-sheet/). It will has the character sheet that was dynamically made with typescript
-2. You can also go to [My Hello World site](https://benwayland-cell.github.io/CSE310-module2-TypeScript-CosmereRPG-character-sheet/helloworld/helloworld.html) or my [Other Testing site](https://benwayland-cell.github.io/CSE310-module2-TypeScript-CosmereRPG-character-sheet/helloworld/helloworld.html) to see how I learned to code various things in javascript.
+2. You can also go to [My Hello World site](https://benwayland-cell.github.io/CSE310-module2-TypeScript-CosmereRPG-character-sheet/helloworld/helloworld.html) or my [Other Testing site](https://benwayland-cell.github.io/CSE310-module2-TypeScript-CosmereRPG-character-sheet/otherTesting/other-testing.html) to see how I learned to code various things in javascript.
 
 Instructions for using the software:
 
